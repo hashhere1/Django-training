@@ -1,0 +1,5 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def home_view(request):
+    return HttpResponse("Salam! Django achitecture working successfully")
