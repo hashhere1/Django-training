@@ -1,7 +1,9 @@
 from django.db import models
+import re
+from django.contrib import admin
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from decimal import Decimal
 
 """
@@ -10,6 +12,21 @@ There are 3 types of models
 -Abstract Model
 -Proxy model
 """
+
+
+class LowerCaseEmailField(models.EmailField):
+
+    def get_prep_value(self, value):
+        value = super().get_prep_value(value)
+        if isinstance(value, str):
+            return value.lower()
+        return value
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=100)
+    email = LowerCaseEmailField(unique=True)
+
 
 #This is an abstract model. It works as a wrapper. It does not physically create a model in database. It just add the common fields in other data models.
 #For example: created_at and updated_at fields are used in almost every table so we made an abstract table of these and we will inherit these properties into other tables.
