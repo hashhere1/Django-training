@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, RegexValidator, MaxValueVa
 from datetime import date
 from django.db.models import F, Q
 from django.conf import settings
+from .fields import ISBNField
 
 
 def validate_not_future_year(value):
@@ -61,7 +62,7 @@ class Book(TimeStampedModel):
 
 
     title = models.CharField(max_length=200, db_index=True, validators=[validate_not_blank], help_text="Book Title")
-    isbn = models.CharField(max_length=13, unique=True, validators=[RegexValidator(r"^\d{13}$", "ISBN should be consists of 13 numbers")])
+    isbn = ISBNField(unique=True)
     genre = models.CharField(max_length=3, choices=Genre.choices, default=Genre.FICTION)
     price = models.DecimalField(max_digits=8, decimal_places=2, validators=[MinValueValidator(0)], )
     published_year = models.PositiveIntegerField(validators=[MinValueValidator(1450), validate_not_future_year])
